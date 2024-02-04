@@ -24,6 +24,7 @@
     "express-session": "^1.17.3",
     "memorystore": "^1.6.7",
     "permissionless": "^0.0.35",
-    "viem": "^2.7.2"
+    "viem": "^2.7.2",
+    "web3": "^4.4.0"
   }
 }

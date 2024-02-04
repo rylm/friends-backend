@@ -34,6 +34,7 @@ import { avalancheFuji } from "viem/chains";
 import { createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
 import { privateKeyToBiconomySmartAccount } from "permissionless/accounts";
 import { scrypt, toUtf8Bytes, id } from "ethers";
+import { Web3 } from "web3";
 
 const privateKeyFromSignature = async (signature: string): Promise<string> => {
   const signatureBuffer = toUtf8Bytes(signature);
@@ -46,9 +47,10 @@ const API_KEY = "a1dc6007-223a-4485-b4d0-c0ee32a3ff62";
 const PAYMASTER_URL = `https://api.pimlico.io/v2/avalanche-fuji/rpc?apikey=${API_KEY}`;
 const BUNDLER_URL = `https://api.pimlico.io/v1/avalanche-fuji/rpc?apikey=${API_KEY}`;
 const ENTRY_POINT = "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789";
+const TESTNET_URL = "https://rpc.ankr.com/avalanche_fuji";
 
 const publicClient = createPublicClient({
-  transport: http("https://rpc.ankr.com/avalanche_fuji"),
+  transport: http(TESTNET_URL),
 });
 const paymasterClient = createPimlicoPaymasterClient({
   transport: http(PAYMASTER_URL),
@@ -123,6 +125,13 @@ app.post("/send-tx", async (req, res) => {
     `User operation included: https://43113.testnet.snowtrace.io/tx/${txHash}`,
   );
   res.json({ txHash });
+});
+
+app.get("/get-balance", async (req, res) => {
+  const address = req.query.address as string;
+  const web3 = new Web3(new Web3.providers.HttpProvider(TESTNET_URL));
+  const balance = await web3.eth.getBalance(address);
+  res.json({ balance: Number(balance) });
 });
 
 app.listen(PORT, () => {
