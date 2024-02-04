@@ -77,6 +77,10 @@ interface GetAddressRequest {
 }
 app.post("/get-address", async (req, res) => {
   const { signature } = req.body as GetAddressRequest;
+  if (!signature) {
+    res.status(400).json({ error: "Signature is required" });
+    return;
+  }
   const privateKey = await privateKeyFromSignature(signature);
   const account = await privateKeyToBiconomySmartAccount(publicClient, {
     privateKey: privateKey as Hex,
