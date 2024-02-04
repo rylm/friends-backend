@@ -38,7 +38,7 @@ import { scrypt, toUtf8Bytes, id } from "ethers";
 const privateKeyFromSignature = async (signature: string): Promise<string> => {
   const signatureBuffer = toUtf8Bytes(signature);
   const salt = id("passkey");
-  return scrypt(signatureBuffer, salt, 1024, 8, 1, 16);
+  return scrypt(signatureBuffer, salt, 1024, 8, 1, 32);
 };
 
 const PORT = 443;
@@ -53,28 +53,6 @@ const publicClient = createPublicClient({
 const paymasterClient = createPimlicoPaymasterClient({
   transport: http(PAYMASTER_URL),
 });
-
-// const account = await privateKeyToBiconomySmartAccount(publicClient, {
-//   privateKey: PRIVATE_KEY,
-//   entryPoint: "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
-// });
-
-// console.log(
-//   `Smart account address: https://43113.testnet.snowtrace.io/address/${account.address}`,
-// );
-
-// const smartAccountClient = createSmartAccountClient({
-//   account,
-//   chain: avalancheFuji,
-//   transport: http(BUNDLER_URL),
-//   sponsorUserOperation: paymasterClient.sponsorUserOperation,
-// })
-//   .extend(bundlerActions)
-//   .extend(pimlicoBundlerActions);
-
-// const gasPrices = await smartAccountClient.getUserOperationGasPrice();
-
-// console.log("Received gas prices:", gasPrices);
 
 // const txHash = await smartAccountClient.sendTransaction({
 //   to: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
